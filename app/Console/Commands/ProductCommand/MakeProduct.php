@@ -55,6 +55,7 @@ class MakeProduct extends Command
         if ($categories != null) { //convert categories to array
             $categories = explode(',', $categories);
         }
+        
         $data = ['product' => $product, "categories" => $categories];
         $created = $this->productService->create($data);
         $this->info($name . ' has been add successfully with id ' . $created['id']);

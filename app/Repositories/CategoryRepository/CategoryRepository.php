@@ -21,11 +21,11 @@ class CategoryRepository
         return $createdCategory;
     }
 
-    public function find(int $id): bool
+    public function exists(int $id): bool
     {
-        $exist = Category::find($id)->exists();
+        $exists = Category::where('id', $id)->exists();
 
-        return $exist;
+        return $exists;
     }
 
     public function delete(int $id)

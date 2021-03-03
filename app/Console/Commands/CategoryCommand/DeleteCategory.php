@@ -19,7 +19,7 @@ class DeleteCategory extends Command
      *
      * @var string
      */
-    protected $description = 'Delete Category';
+    protected $description = 'Delete a Category with the given id';
 
     /**
      * Create a new command instance.
@@ -43,8 +43,9 @@ class DeleteCategory extends Command
     public function handle()
     {
         $id = $this->argument('id');
-        $existed = $this->categoryService->find($id);
-        if ($existed) {
+        $exists = $this->categoryService->exists($id);
+
+        if ($exists) {
             $this->categoryService->delete($id);
             $this->info("Category Deleted successfully");
         } else {

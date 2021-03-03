@@ -160,11 +160,14 @@ export default {
       Axios.post("/api/addProduct", data)
         .then((res) => {
           this.$emit("addSuccess", res.data);
-        })
-        .finally((err) => {
           this.product = this.freshProduct();
           this.url = "";
           this.selectedCategorie = null;
+        })
+        .catch(() => {
+          alert("the given data is invalid");
+        })
+        .finally((err) => {
           this.disabled = false;
         });
     },

@@ -2259,10 +2259,13 @@ __webpack_require__.r(__webpack_exports__);
       data.product.categories = "";
       axios__WEBPACK_IMPORTED_MODULE_0___default.a.post("/api/addProduct", data).then(function (res) {
         _this.$emit("addSuccess", res.data);
-      })["finally"](function (err) {
+
         _this.product = _this.freshProduct();
         _this.url = "";
         _this.selectedCategorie = null;
+      })["catch"](function () {
+        alert("the given data is invalid");
+      })["finally"](function (err) {
         _this.disabled = false;
       });
     },

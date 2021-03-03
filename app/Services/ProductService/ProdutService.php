@@ -2,8 +2,10 @@
 
 namespace App\Services\ProductService;
 
-use App\Repositories\ProductRepository\ProductRepository;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Validator;
+use App\Repositories\ProductRepository\ProductRepository;
+use Illuminate\Validation\ValidationException;
 
 class ProductService
 {
@@ -24,23 +26,21 @@ class ProductService
     {
         $createdProduct = [];
 
-        if ($this->checkFields($data["product"])) {
+        $isValide = Validator::make($data["product"], [
+            'name' => 'required',
+            'price' => 'required|numeric',
+            'description' => 'required',
+        ]);
+
+        try {
             $data["product"]["image"] = $this->uploadImage($data["product"]["image"]);
             $createdProduct = $this->productRepository->create($data);
-        } else {
-            abort(500, "The given data is invalid");
+        } catch (\Exception $exception) {
+            throw ValidationException::withMessages(['errors' => $exception]);
         }
+
 
         return $createdProduct;
-    }
-
-    public function checkFields(array $product): bool
-    {
-        if (empty($product['name']) || empty($product['price']) || empty($product['description']) || !is_numeric($product['price'])) {
-            return false;
-        } else {
-            return true;
-        }
     }
 
     public function delete(int $id)
@@ -75,7 +75,7 @@ class ProductService
     public function decodeBase64(?string $image): array
     {
         $data = [];
-        
+
         if (!empty($image)) {
             $encoded = explode(";base64,", $image);
             $content = base64_decode($encoded[1]);

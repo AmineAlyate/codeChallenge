@@ -3,6 +3,7 @@
 namespace App\Services\CategoryService;
 
 use App\Repositories\CategoryRepository\CategoryRepository;
+use Illuminate\Validation\ValidationException;
 
 class CategoryService
 {
@@ -20,16 +21,20 @@ class CategoryService
 
     public function create(array $data): object
     {
-        $createdCategory = $this->categoryRepository->create($data);
+        try {
+            $createdCategory = $this->categoryRepository->create($data);
+        } catch (\Exception $exception) {
+            throw ValidationException::withMessages(['errors' => $exception]);
+        }
 
         return $createdCategory;
     }
 
-    public function find(int $id): bool
+    public function exists(int $id): bool
     {
-        $existed = $this->categoryRepository->find($id);
+        $exists = $this->categoryRepository->exists($id);
 
-        return $existed;
+        return $exists;
     }
 
     public function delete(int $id)
